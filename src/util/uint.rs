@@ -323,6 +323,12 @@ macro_rules! construct_uint {
             }
         }
 
+        impl fmt::Display for $name {
+            fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+                <fmt::Debug>::fmt(self, f)
+            }
+        }
+
         impl<S: ::network::serialize::SimpleEncoder> ::network::encodable::ConsensusEncodable<S> for $name {
             #[inline]
             fn consensus_encode(&self, s: &mut S) -> Result<(), S::Error> {
