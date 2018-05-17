@@ -162,7 +162,8 @@ impl Address {
     fn bech_network (network: Network) -> bitcoin_bech32::constants::Network {
         match network {
             Network::Bitcoin => bitcoin_bech32::constants::Network::Bitcoin,
-            Network::Testnet => bitcoin_bech32::constants::Network::Testnet
+            Network::Testnet => bitcoin_bech32::constants::Network::Testnet,
+            _ => panic!("Invalid network to be converted"),
         }
     }
 
@@ -207,6 +208,7 @@ impl ToString for Address {
                 prefixed[0] = match self.network {
                     Network::Bitcoin => 0,
                     Network::Testnet => 111,
+                    _ => panic!("Invalid network used for address"),
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
                 base58::check_encode_slice(&prefixed[..])
@@ -216,6 +218,7 @@ impl ToString for Address {
                 prefixed[0] = match self.network {
                     Network::Bitcoin => 0,
                     Network::Testnet => 111,
+                    _ => panic!("Invalid network used for address"),
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
                 base58::check_encode_slice(&prefixed[..])
@@ -225,6 +228,7 @@ impl ToString for Address {
                 prefixed[0] = match self.network {
                     Network::Bitcoin => 5,
                     Network::Testnet => 196,
+                    _ => panic!("Invalid network used for address"),
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
                 base58::check_encode_slice(&prefixed[..])
