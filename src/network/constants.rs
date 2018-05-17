@@ -28,7 +28,9 @@ user_enum! {
         #[doc="Classic Bitcoin"]
         Bitcoin <-> "bitcoin",
         #[doc="Bitcoin's testnet"]
-        Testnet <-> "testnet"
+        Testnet <-> "testnet",
+        #[doc="Bitcoin's regtest"]
+        Regtest <-> "regtest"
     }
 }
 
@@ -44,7 +46,8 @@ pub const USER_AGENT: &'static str = "bitcoin-rust v0.1";
 pub fn magic(network: Network) -> u32 {
     match network {
         Network::Bitcoin => 0xD9B4BEF9,
-        Network::Testnet => 0x0709110B
+        Network::Testnet => 0x0709110B,
+        Network::Regtest => 0xDAB5BFFA,
         // Note: any new entries here must be added to `consensus_decode` below
     }
 }
@@ -63,6 +66,7 @@ impl<D: SimpleDecoder> ConsensusDecodable<D> for Network {
         match magic {
             0xD9B4BEF9 => Ok(Network::Bitcoin),
             0x0709110B => Ok(Network::Testnet),
+            0xDAB5BFFA => Ok(Network::Regtest),
             x => Err(d.error(format!("Unknown network (magic {:x})", x)))
         }
     }
