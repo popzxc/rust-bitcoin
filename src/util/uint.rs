@@ -408,6 +408,19 @@ mod tests {
     }
 
     #[test]
+    pub fn uint256_display_test() {
+        assert_eq!(format!("{}", Uint256::from_u64(0xDEADBEEF).unwrap()),
+                   "0x00000000000000000000000000000000000000000000000000000000deadbeef");
+        assert_eq!(format!("{}", Uint256::from_u64(u64::max_value()).unwrap()),
+                   "0x000000000000000000000000000000000000000000000000ffffffffffffffff");
+
+        let max_val = Uint256([0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF,
+                               0xFFFFFFFFFFFFFFFF]);
+        assert_eq!(format!("{}", max_val),
+                   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    }
+
+    #[test]
     pub fn uint256_comp_test() {
         let small = Uint256([10u64, 0, 0, 0]);
         let big = Uint256([0x8C8C3EE70C644118u64, 0x0209E7378231E632, 0, 0]);

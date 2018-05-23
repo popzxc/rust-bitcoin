@@ -79,7 +79,7 @@ macro_rules! impl_array_newtype {
             pub fn is_empty(&self) -> bool { false }
 
             #[inline]
-            /// Returns the underlying data
+            /// Returns the underlying data.
             pub fn data(&self) -> [$ty; $len] { self.0.clone() }
         }
 
