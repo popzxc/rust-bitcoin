@@ -17,7 +17,9 @@
 //! This module provides predefined set of parameters for different chains.
 //!
 
+use network::constants;
 use network::constants::Network;
+use util::uint::Uint256;
 
 #[derive(Debug, Clone)]
 /// Parameters that influence chain consensus.
@@ -30,12 +32,14 @@ pub struct ConsensusParams {
     pub bip65_height: u32,
     /// Block height at which BIP65 becomes active.
     pub bip66_height: u32,
-    ///Minimum blocks including miner confirmation of the total of 2016 blocks in a retargeting period,
-    ///(nPowTargetTimespan / nPowTargetSpacing) which is also used for BIP9 deployments.
-    ///Examples: 1916 for 95%, 1512 for testchains.
+    /// Minimum blocks including miner confirmation of the total of 2016 blocks in a retargeting period,
+    /// (nPowTargetTimespan / nPowTargetSpacing) which is also used for BIP9 deployments.
+    /// Examples: 1916 for 95%, 1512 for testchains.
     pub rule_change_activation_threshold: u32,
     /// Number of blocks with the same set of rules.
     pub miner_confirmation_window: u32,
+    /// Proof of work limit value. It cointans the lowest possible difficulty.
+    pub pow_limit: Uint256,
 }
 
 impl ConsensusParams {
@@ -49,6 +53,7 @@ impl ConsensusParams {
                 bip66_height: 363725,   // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
                 rule_change_activation_threshold: 1916, // 95%
                 miner_confirmation_window: 2016,
+                pow_limit: constants::MAX_BITS_BITCOIN.clone(),
             },
             Network::Testnet => ConsensusParams {
                 bip16_time: 1333238400, // Apr 1 2012
@@ -57,6 +62,7 @@ impl ConsensusParams {
                 bip66_height: 330776,   // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
                 rule_change_activation_threshold: 1512, // 75%
                 miner_confirmation_window: 2016,
+                pow_limit: constants::MAX_BITS_TESTNET.clone(),
             },
             Network::Regtest => ConsensusParams {
                 bip16_time: 1333238400, // Apr 1 2012
@@ -65,6 +71,7 @@ impl ConsensusParams {
                 bip66_height: 1251,     // used only in rpc tests
                 rule_change_activation_threshold: 108, // 75%
                 miner_confirmation_window: 144,
+                pow_limit: constants::MAX_BITS_REGTEST.clone(),
             },
         }
     }

@@ -20,6 +20,7 @@
 
 use network::encodable::{ConsensusDecodable, ConsensusEncodable};
 use network::serialize::{SimpleEncoder, SimpleDecoder};
+use util::uint::Uint256;
 
 user_enum! {
     #[derive(Copy, PartialEq, Eq, Clone, Hash)]
@@ -51,6 +52,13 @@ pub fn magic(network: Network) -> u32 {
         // Note: any new entries here must be added to `consensus_decode` below
     }
 }
+
+/// Lowest possible difficulty for Mainnet.
+pub const MAX_BITS_BITCOIN: Uint256 = Uint256([0xffffffffffffffffu64, 0xffffffffffffffffu64, 0xffffffffffffffffu64, 0x00000000ffffffffu64]);
+/// Lowest possible difficulty for Testnet.
+pub const MAX_BITS_TESTNET: Uint256 = Uint256([0xffffffffffffffffu64, 0xffffffffffffffffu64, 0xffffffffffffffffu64, 0x00000000ffffffffu64]);
+/// Lowest possible difficulty for Regtest.
+pub const MAX_BITS_REGTEST: Uint256 = Uint256([0xffffffffffffffffu64, 0xffffffffffffffffu64, 0xffffffffffffffffu64, 0x7fffffffffffffffu64]);
 
 impl<S: SimpleEncoder> ConsensusEncodable<S> for Network {
     #[inline]
