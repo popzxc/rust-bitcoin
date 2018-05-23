@@ -94,6 +94,26 @@ impl BlockHeader {
         }
     }
 
+    /// Computes the target value in float format from Uint256 format.
+    pub fn bits_from_compact(value: &Uint256) -> u32 {
+        let mut size = (value.bits() + 7) / 8;
+        let mut compact = if size <= 3 {
+            (value.low_u64() << (8 * (3 - size))) as u32
+        } else {
+            let bn = *value >> (8 * (size - 3));
+            bn.low_u32()
+        };
+
+        if (compact & 0x00800000) != 0 {
+            compact >>= 8;
+            size += 1;
+        }
+
+        assert!((compact & !0x007fffff) == 0);
+        assert!(size < 256);
+        compact | (size << 24) as u32
+    }
+
     /// Compute the popular "difficulty" measure for mining
     pub fn difficulty (&self, network: Network) -> u64 {
         (max_target(network) / self.target()).low_u64()
@@ -144,7 +164,7 @@ impl_consensus_encoding!(LoneBlockHeader, header, tx_count);
 mod tests {
     use serialize::hex::FromHex;
 
-    use blockdata::block::Block;
+    use blockdata::block::{Block, BlockHeader};
     use network::serialize::{deserialize, serialize};
 
     #[test]
@@ -194,6 +214,15 @@ mod tests {
         // [test] TODO: check the transaction data
 
         assert_eq!(serialize(&real_decode).ok(), Some(segwit_block));
+    }
+
+    #[test]
+    fn compact_roundrtip_test() {
+        let some_header = "010000004ddccd549d28f385ab457e98d1b11ce80bfea2c5ab93015ade4973e400000000bf4473e53794beae34e64fccc471dace6ae544180816f89591894e0f417a914cd74d6e49ffff001d323b3a7b".from_hex().unwrap();
+
+        let header: BlockHeader = deserialize(&some_header).expect("Can't deserialize correct block header");
+
+        assert_eq!(header.bits, BlockHeader::bits_from_compact(&header.target()));
     }
 }
 
