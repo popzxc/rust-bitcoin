@@ -24,6 +24,8 @@ use util::uint::Uint256;
 #[derive(Debug, Clone)]
 /// Parameters that influence chain consensus.
 pub struct ConsensusParams {
+    /// Network for which parameters are valid.
+    pub network: Network,
     /// Time when BIP16 becomes active.
     pub bip16_time: u32,
     /// Block height at which BIP34 becomes active.
@@ -51,6 +53,7 @@ impl ConsensusParams {
     pub fn new(network: Network) -> Self {
         match network {
             Network::Bitcoin => ConsensusParams {
+                network: Network::Bitcoin,
                 bip16_time: 1333238400, // Apr 1 2012
                 bip34_height: 227931,   // 000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8
                 bip65_height: 388381,   // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
@@ -62,6 +65,7 @@ impl ConsensusParams {
                 pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks. 
             },
             Network::Testnet => ConsensusParams {
+                network: Network::Testnet,
                 bip16_time: 1333238400, // Apr 1 2012
                 bip34_height: 21111,    // 0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8
                 bip65_height: 581885,   // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
@@ -73,6 +77,7 @@ impl ConsensusParams {
                 pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks.
             },
             Network::Regtest => ConsensusParams {
+                network: Network::Regtest,
                 bip16_time: 1333238400, // Apr 1 2012
                 bip34_height: 100000000,    // not activated on regtest
                 bip65_height: 1351,
