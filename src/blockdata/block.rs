@@ -95,7 +95,7 @@ impl BlockHeader {
     }
 
     /// Computes the target value in float format from Uint256 format.
-    pub fn bits_from_compact(value: &Uint256) -> u32 {
+    pub fn compact_target_from_u256(value: &Uint256) -> u32 {
         let mut size = (value.bits() + 7) / 8;
         let mut compact = if size <= 3 {
             (value.low_u64() << (8 * (3 - size))) as u32
@@ -115,7 +115,7 @@ impl BlockHeader {
     }
 
     /// Compute the popular "difficulty" measure for mining
-    pub fn difficulty (&self, network: Network) -> u64 {
+    pub fn difficulty(&self, network: Network) -> u64 {
         (max_target(network) / self.target()).low_u64()
     }
 
@@ -222,7 +222,7 @@ mod tests {
 
         let header: BlockHeader = deserialize(&some_header).expect("Can't deserialize correct block header");
 
-        assert_eq!(header.bits, BlockHeader::bits_from_compact(&header.target()));
+        assert_eq!(header.bits, BlockHeader::compact_target_from_u256(&header.target()));
     }
 }
 
