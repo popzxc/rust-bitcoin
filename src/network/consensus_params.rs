@@ -47,7 +47,9 @@ pub struct ConsensusParams {
     /// Difficulty recalculation interval.
     pub pow_target_timespan: u64,
     /// Determines whether minimal difficulty may be used for blocks or not.
-    pub allow_min_difficulty_blocks: bool
+    pub allow_min_difficulty_blocks: bool,
+    /// Determines whether retargeting is disabled for this network or not.
+    pub no_pow_retargeting: bool,
 }
 
 impl ConsensusParams {
@@ -65,7 +67,8 @@ impl ConsensusParams {
                 pow_limit: constants::MAX_BITS_BITCOIN.clone(),
                 pow_target_spacing: 10 * 60, // 10 minutes.
                 pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks.
-                allow_min_difficulty_blocks: false
+                allow_min_difficulty_blocks: false,
+                no_pow_retargeting: false,
             },
             Network::Testnet => ConsensusParams {
                 network: Network::Testnet,
@@ -79,6 +82,7 @@ impl ConsensusParams {
                 pow_target_spacing: 10 * 60, // 10 minutes.
                 pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks.
                 allow_min_difficulty_blocks: true,
+                no_pow_retargeting: false,
             },
             Network::Regtest => ConsensusParams {
                 network: Network::Regtest,
@@ -91,7 +95,8 @@ impl ConsensusParams {
                 pow_limit: constants::MAX_BITS_REGTEST.clone(),
                 pow_target_spacing: 10 * 60, // 10 minutes.
                 pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks.
-                allow_min_difficulty_blocks: true
+                allow_min_difficulty_blocks: true,
+                no_pow_retargeting: true,
             },
         }
     }
