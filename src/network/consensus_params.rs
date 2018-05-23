@@ -40,6 +40,10 @@ pub struct ConsensusParams {
     pub miner_confirmation_window: u32,
     /// Proof of work limit value. It cointans the lowest possible difficulty.
     pub pow_limit: Uint256,
+    /// Expected amount of time to mine one block.
+    pub pow_target_spacing: u64,
+    /// Difficulty recalculation interval.
+    pub pow_target_timespan: u64,
 }
 
 impl ConsensusParams {
@@ -54,6 +58,8 @@ impl ConsensusParams {
                 rule_change_activation_threshold: 1916, // 95%
                 miner_confirmation_window: 2016,
                 pow_limit: constants::MAX_BITS_BITCOIN.clone(),
+                pow_target_spacing: 10 * 60, // 10 minutes.
+                pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks. 
             },
             Network::Testnet => ConsensusParams {
                 bip16_time: 1333238400, // Apr 1 2012
@@ -63,6 +69,8 @@ impl ConsensusParams {
                 rule_change_activation_threshold: 1512, // 75%
                 miner_confirmation_window: 2016,
                 pow_limit: constants::MAX_BITS_TESTNET.clone(),
+                pow_target_spacing: 10 * 60, // 10 minutes.
+                pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks.
             },
             Network::Regtest => ConsensusParams {
                 bip16_time: 1333238400, // Apr 1 2012
@@ -72,7 +80,14 @@ impl ConsensusParams {
                 rule_change_activation_threshold: 108, // 75%
                 miner_confirmation_window: 144,
                 pow_limit: constants::MAX_BITS_REGTEST.clone(),
+                pow_target_spacing: 10 * 60, // 10 minutes.
+                pow_target_timespan: 14 * 24 * 60 * 60, // 2 weeks.
             },
         }
     }
+
+    /// Calculates amount of blocks between difficulty adjustments.
+    pub fn difficulty_adjustment_interval(&self) -> u64 {
+        self.pow_target_timespan / self.pow_target_spacing
+    } 
 }
