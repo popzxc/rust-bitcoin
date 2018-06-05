@@ -96,8 +96,7 @@ impl ToString for Privkey {
         let mut ret = [0; 34];
         ret[0] = match self.network {
             Network::Bitcoin => 128,
-            Network::Testnet => 239,
-            _ => panic!("Invalid network used for private key"),
+            Network::Testnet | Network::Regtest => 239,
         };
         ret[1..33].copy_from_slice(&self.key[..]);
         if self.compressed {

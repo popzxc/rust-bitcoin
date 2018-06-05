@@ -162,8 +162,7 @@ impl Address {
     fn bech_network (network: Network) -> bitcoin_bech32::constants::Network {
         match network {
             Network::Bitcoin => bitcoin_bech32::constants::Network::Bitcoin,
-            Network::Testnet => bitcoin_bech32::constants::Network::Testnet,
-            _ => panic!("Invalid network to be converted"),
+            Network::Testnet | Network::Regtest => bitcoin_bech32::constants::Network::Testnet,
         }
     }
 
@@ -207,8 +206,7 @@ impl ToString for Address {
                 let mut prefixed = [0; 21];
                 prefixed[0] = match self.network {
                     Network::Bitcoin => 0,
-                    Network::Testnet => 111,
-                    _ => panic!("Invalid network used for address"),
+                    Network::Testnet | Network::Regtest => 111,
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
                 base58::check_encode_slice(&prefixed[..])
@@ -217,8 +215,7 @@ impl ToString for Address {
                 let mut prefixed = [0; 21];
                 prefixed[0] = match self.network {
                     Network::Bitcoin => 0,
-                    Network::Testnet => 111,
-                    _ => panic!("Invalid network used for address"),
+                    Network::Testnet | Network::Regtest => 111,
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
                 base58::check_encode_slice(&prefixed[..])
@@ -227,8 +224,7 @@ impl ToString for Address {
                 let mut prefixed = [0; 21];
                 prefixed[0] = match self.network {
                     Network::Bitcoin => 5,
-                    Network::Testnet => 196,
-                    _ => panic!("Invalid network used for address"),
+                    Network::Testnet | Network::Regtest => 196,
                 };
                 prefixed[1..].copy_from_slice(&hash[..]);
                 base58::check_encode_slice(&prefixed[..])
@@ -261,6 +257,10 @@ impl FromStr for Address {
                 network: network,
                 payload: Payload::WitnessProgram(witprog)
             });
+        }
+
+        if s.len() > 50 {
+            return Err(Error::Base58(base58::Error::InvalidLength(s.len() * 11 / 15)));
         }
 
         // Base 58

@@ -344,7 +344,7 @@ impl ToString for ExtendedPrivKey {
         let mut ret = [0; 78];
         ret[0..4].copy_from_slice(&match self.network {
             Network::Bitcoin => [0x04, 0x88, 0xAD, 0xE4],
-            Network::Testnet => [0x04, 0x35, 0x83, 0x94],
+            Network::Testnet | Network::Regtest => [0x04, 0x35, 0x83, 0x94],
             _ => panic!("Invalid network used for extended private key"),
         }[..]);
         ret[4] = self.depth as u8;
@@ -403,7 +403,7 @@ impl ToString for ExtendedPubKey {
         let mut ret = [0; 78];
         ret[0..4].copy_from_slice(&match self.network {
             Network::Bitcoin => [0x04u8, 0x88, 0xB2, 0x1E],
-            Network::Testnet => [0x04u8, 0x35, 0x87, 0xCF],
+            Network::Testnet | Network::Regtest => [0x04u8, 0x35, 0x87, 0xCF],
             _ => panic!("Invalid network used for extended private key"),
         }[..]);
         ret[4] = self.depth as u8;

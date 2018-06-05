@@ -20,14 +20,6 @@ For JSONRPC interaction with Bitcoin Core, it is recommended to use [rust-jsonrp
 which uses the underlying [strason library](https://github.com/apoelstra/strason)
 which parses decimal numbers as strings, preventing precision errors.
 
-# Usage
-
-To use rust-bitcoin, just add the following to your Cargo.toml.
-
-```toml
-[dependencies]
-bitcoin = "0.12"
-```
 
 # Known limitations
 
@@ -101,4 +93,12 @@ See `Transaction::verify` and `Script::verify` methods.
 * Add `Transaction::get_weight()`
 
 * Update bip143 `sighash_all` API to be more ergonomic
+
+#### 0.13.1
+
+* Add `Display` trait to uints, `FromStr` trait to `Network` enum
+
+* Add witness inv types to inv enum, constants for Bitcoin regtest network, `is_coin_base` accessor for tx inputs
+
+* Expose `merkleroot(Vec<Sha256dHash>)`
 
